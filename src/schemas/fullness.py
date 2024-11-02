@@ -1,13 +1,14 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, conlist
 
 
 class FullnessDTO(BaseModel):
     waste_type_id: int
-    waste_type: str
+    name: str
     current_fill: int
     capacity: int
 
-
 class FullnessCreateDTO(BaseModel):
-    waste_type_name: str
+    waste_type_id: int
+    current_fill: int = 0
     capacity: int
+

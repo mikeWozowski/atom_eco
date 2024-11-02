@@ -9,6 +9,7 @@ sqlalchemy = {extras = ["asyncio"], version = "*"}
 asyncpg = "*"
 python-dotenv = "*"
 alembic = "*"
+pytest = "*"
 
 [dev-packages]
 

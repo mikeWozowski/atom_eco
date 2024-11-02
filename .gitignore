@@ -25,6 +25,7 @@ pgdata/
 alembic/versions/*.pyc
 alembic/__pycache__/
 alembic/versions/__pycache__/
+.mako
 
 # SQLAlchemy
 sqlalchemy_debug.log
