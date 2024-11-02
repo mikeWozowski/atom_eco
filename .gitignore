@@ -32,7 +32,6 @@ sqlalchemy_debug.log
 
 # .env files
 .env
-.env.*
 
 # Logs
 logs/
