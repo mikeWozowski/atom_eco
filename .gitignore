@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+
+# Env
+.env
+
+# MacOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# PyCharm
+.idea/
+*.iml
+
+# Postgres
+pgdata/
+*.pgsql
+
+# Alembic
+alembic/versions/*.pyc
+alembic/__pycache__/
+alembic/versions/__pycache__/
+
+# SQLAlchemy
+sqlalchemy_debug.log
+
+# .env files
+.env
+.env.*
+
+# Logs
+logs/
+*.log
+*.out
+
+# Python byte-compiled files
+*.pyc
+
+# Системные файлы и кэш
+Thumbs.db
+ehthumbs.db
+*.swp
