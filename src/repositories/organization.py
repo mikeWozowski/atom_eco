@@ -1,8 +1,9 @@
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload
 
-from src.schemas.organization import OrganizationIdDTO, OrganizationCreateDTO, OrganizationRetrieveDTO
-from src.models import Organization
+from src.schemas.organization import OrganizationIdDTO, OrganizationCreateDTO
+from src.models import Organization, Fullness
 
 
 class OrganizationRepository:
@@ -13,14 +14,27 @@ class OrganizationRepository:
         self.db = db
 
     async def get_all_organizations(self):
-        result = await self.db.execute(select(Organization))
-        return result.scalars().all()
+        query = (
+            select(Organization)
+            .options(
+                joinedload(Organization.fullness).joinedload(Fullness.waste_type)
+            )
+        )
 
-    async def get_organization_by_id(self, organization_id: int) -> OrganizationRetrieveDTO:
-        result = await self.db.execute(select(Organization).where(Organization.id == organization_id))
-        organization = result.scalars().first()
+        result = await self.db.execute(query)
+        return result.unique().scalars().all()
 
-        return OrganizationRetrieveDTO.model_validate(organization)
+    async def get_organization_by_id(self, organization_id: int):
+        query = (
+            select(Organization)
+            .options(
+                joinedload(Organization.fullness).joinedload(Fullness.waste_type)
+            )
+            .where(Organization.id == organization_id)
+        )
+
+        result = await self.db.execute(query)
+        return result.scalars().first()
 
     async def create_organization(
             self,
@@ -35,3 +49,9 @@ class OrganizationRepository:
         await self.db.refresh(new_organization)
 
         return OrganizationIdDTO.model_validate(new_organization)
+
+    async def delete_organization_by_id(self, organization_id: int):
+        organization = await self.get_organization_by_id(organization_id)
+        if organization:
+            await self.db.delete(organization)
+            await self.db.commit()

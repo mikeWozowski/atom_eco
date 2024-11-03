@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from .routers.organization import router as organization_router
-from .routers.storage import router as storage_router
+from src.routers.organization import router as organization_router
+from src.routers.storage import router as storage_router
 
 
 app = FastAPI(

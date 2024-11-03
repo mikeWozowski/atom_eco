@@ -14,6 +14,16 @@ class StorageRetrieveDTO(BaseModel):
         from_attributes = True
 
 
+class StorageAdvancedRetrieveDTO(BaseModel):
+    id: int
+    name: str
+    fullness: list[FullnessDTO]
+    distance: float
+
+    class Config:
+        from_attributes = True
+
+
 class StorageIdDTO(BaseModel):
     id: int
 

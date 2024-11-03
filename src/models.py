@@ -25,7 +25,11 @@ class Organization(Base):
     latitude: Mapped[float] = mapped_column(Float())
     longitude: Mapped[float] = mapped_column(Float())
 
-    fullness: Mapped[list["Fullness"]] = relationship("Fullness", back_populates="organization")
+    fullness: Mapped[list["Fullness"]] = relationship(
+        "Fullness",
+        back_populates="organization",
+        cascade="all, delete-orphan"
+    )
 
 
 class Storage(Base):
@@ -36,7 +40,11 @@ class Storage(Base):
     latitude: Mapped[float] = mapped_column(Float())
     longitude: Mapped[float] = mapped_column(Float())
 
-    fullness: Mapped[list["Fullness"]] = relationship("Fullness", back_populates="storage")
+    fullness: Mapped[list["Fullness"]] = relationship(
+        "Fullness",
+        back_populates="storage",
+        cascade="all, delete-orphan"
+    )
 
 
 class Fullness(Base):

@@ -8,7 +8,7 @@ class OrganizationRetrieveDTO(BaseModel):
     name: str
     latitude: float
     longitude: float
-    # fullness: list[FullnessDTO]
+    fullness: list[FullnessDTO]
 
     class Config:
         from_attributes = True
