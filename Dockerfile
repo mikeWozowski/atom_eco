@@ -4,7 +4,9 @@ WORKDIR /app
 
 COPY Pipfile Pipfile.lock ./
 
-RUN pip install pipenv && pipenv install --deploy --ignore-pipfile
+RUN pip install pipenv
+
+RUN pipenv --python $(which python3) && pipenv install --deploy
 
 COPY . .
 
