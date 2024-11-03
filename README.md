@@ -26,6 +26,8 @@ cd atom_eco
 
 Переименуйте файл .env.example в .env и настройте переменные окружения.
 
+Обновите sqlalchemy.url в alembic.ini
+
 Примените миграции базы данных с помощью Alembic:
 
 ```bash
