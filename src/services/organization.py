@@ -1,5 +1,6 @@
 from fastapi import HTTPException
 
+from src.schemas.waste import FillWasteDTO
 from src.schemas.fullness import FullnessCreateDTO, FullnessDTO
 from src.repositories.fullness import FullnessRepository
 from src.repositories.organization import OrganizationRepository

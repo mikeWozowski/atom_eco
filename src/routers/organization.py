@@ -83,6 +83,13 @@ async def fill_waste(
 @router.patch("/{organization_id}/recycle")
 async def recycle(
         organization_id: int,
+        fill_waste_dto: FillWasteDTO,
         db: AsyncSession = Depends(get_db)
 ):
-    ...
+    organization_repository = OrganizationRepository(db)
+    storage_repository = StorageRepository(db)
+    fullness_repository = FullnessRepository(db)
+    storage_service = StorageService(storage_repository, fullness_repository, organization_repository)
+
+    result = await storage_service.recycle_waste(organization_id, fill_waste_dto)
+    return result

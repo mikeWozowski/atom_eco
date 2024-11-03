@@ -1,11 +1,13 @@
-FROM python:3.11-slim
+FROM python:3.11
 
 WORKDIR /app
 
-COPY . /app
+COPY Pipfile Pipfile.lock ./
 
-RUN pip install --no-cache-dir poetry \
-    && poetry config virtualenvs.create false \
-    && poetry install --no-root --no-interaction --no-ansi
+RUN pip install pipenv && pipenv install --deploy --ignore-pipfile
 
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
+COPY . .
+
+EXPOSE 8000
+
+CMD ["pipenv", "run", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]

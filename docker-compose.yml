@@ -1,31 +1,24 @@
-version: '3.9'
+version: '3.8'
 
 services:
-  db:
-    image: postgres:15
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Misha383756
-      POSTGRES_DB: atom_eco_db
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - backend
-
-  web:
-    build: .
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
     volumes:
       - .:/app
     ports:
       - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://<username>:<password>@db:5432/<database>
     depends_on:
       - db
-    networks:
-      - backend
 
-volumes:
-  postgres_data:
-
-networks:
-  backend:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: <database>
+      POSTGRES_USER: <username>
+      POSTGRES_PASSWORD: <password>
+    ports:
+      - "5432:5432"

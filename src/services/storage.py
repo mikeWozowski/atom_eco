@@ -2,6 +2,7 @@ import math
 
 from fastapi import HTTPException
 
+from src.schemas.waste import FillWasteDTO
 from src.schemas.storage import StorageAdvancedRetrieveDTO
 from src.repositories.organization import OrganizationRepository
 from src.schemas.fullness import FullnessDTO, FullnessCreateDTO
@@ -120,6 +121,45 @@ class StorageService:
             ))
 
         return storage_info
+
+    async def recycle_waste(self, organization_id: int, fill_waste_dto: FillWasteDTO):
+        organization = await self.organization_repository.get_organization_by_id(organization_id)
+        if not organization:
+            return {"message": "Organization not found."}
+
+        storages = await self.storage_repository.get_all_storages()
+
+        closest_storage = None
+        closest_distance = float('inf')
+
+        for storage in storages:
+            fullness = next((f for f in storage.fullness if f.waste_type_id == fill_waste_dto.waste_type_id), None)
+            if fullness:
+                available_space = fullness.capacity - fullness.current_fill
+                if available_space >= fill_waste_dto.amount:
+                    distance = self.haversine((organization.latitude, organization.longitude),
+                                              (storage.latitude, storage.longitude))
+
+                    if distance < closest_distance:
+                        closest_distance = distance
+                        closest_storage = storage
+
+        if not closest_storage:
+            return {"message": "No suitable storage found for recycling this waste type."}
+
+        new_fill = closest_storage.fullness[
+                       0].current_fill + fill_waste_dto.amount
+        await self.fullness_repository.update_fullness(closest_storage.fullness[0].id, new_fill)
+
+        fullness = await self.fullness_repository.get_fullness_by_organization_id(organization_id,
+                                                                                  fill_waste_dto.waste_type_id)
+        if fullness:
+            new_fill_org = fullness.current_fill - fill_waste_dto.amount
+            await self.fullness_repository.update_fullness(fullness.id, new_fill_org)
+
+        return {
+            "message": f"Waste successfully recycled to storage {closest_storage.name}."
+        }
 
     def haversine(self, coord1, coord2):
         R = 6371000
